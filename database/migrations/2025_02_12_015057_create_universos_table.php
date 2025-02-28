@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('universos', function (Blueprint $table) {
             $table->id();
+            $table->string('name', 100);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
@@ -24,4 +26,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('universos');
     }
-};
+}; 
