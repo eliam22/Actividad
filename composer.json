@@ -3,14 +3,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-<<<<<<< HEAD
-    "keywords": ["laravel", "framework"],
-=======
     "keywords": [
         "laravel",
         "framework"
     ],
->>>>>>> f0fe9a0 (Subiendo proyecto Laravel - Actividad 4)
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -75,8 +71,5 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> f0fe9a0 (Subiendo proyecto Laravel - Actividad 4)
+
