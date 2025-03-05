@@ -11,7 +11,7 @@ return [
     | framework needs to place the application's name in a notification or
     | other UI elements where an application name needs to be displayed.
     |
-    */
+    */  
 
     'name' => env('APP_NAME', 'Laravel'),
 
@@ -82,7 +82,8 @@ return [
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
-    'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
+    'faker_locale' => 'en_US',
+
 
     /*
     |--------------------------------------------------------------------------

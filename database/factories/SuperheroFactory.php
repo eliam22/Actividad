@@ -27,9 +27,9 @@ class SuperheroFactory extends Factory
         return [
             'name' => $this->faker->unique()->name,
             'real_name' => $this->faker->name,
-            'universe_id' => Universo::factory(),
-            'type_id' => SuperheroType::factory(),
-            'gender_id' => Gender::factory(),
+            'universe_id' => \App\Models\Universo::inRandomOrder()->first()?->id ?? 1,
+            'type_id' => \App\Models\SuperheroType::inRandomOrder()->first()?->id ?? 1,
+            'gender_id' => \App\Models\Gender::inRandomOrder()->first()?->id ?? 1,
             'powers' => $this->faker->sentence,
             'affiliation' => $this->faker->word,
         ];

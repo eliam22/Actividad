@@ -9,19 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up() {
-        Schema::create('universo', function (Blueprint $table) {
+    public function up(): void
+    {
+        Schema::create('genders', function (Blueprint $table) {
+            $table->engine = 'InnoDB'; // Asegúrate de usar InnoDB
             $table->id();
-            $table->string('name');
+            $table->string('name', 50);
             $table->timestamps();
         });
-    }    
+    }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('universo');
+        Schema::dropIfExists('genders');
     }
 };

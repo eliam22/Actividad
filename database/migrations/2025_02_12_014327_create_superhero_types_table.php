@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cache', function (Blueprint $table) {
-            $table->string('key')->primary();
-            $table->text('value');
-            $table->integer('expiration');
+        Schema::create('superhero_types', function (Blueprint $table) {
+            $table->engine = 'InnoDB'; // Asegúrate de usar InnoDB
+            $table->id();
+            $table->string('name', 100);
+            $table->timestamps();
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cache');
+        Schema::dropIfExists('superhero_types');
     }
-}; 
+};
+

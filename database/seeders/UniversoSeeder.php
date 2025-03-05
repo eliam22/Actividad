@@ -3,16 +3,13 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Universo;
+use Illuminate\Support\Facades\DB;
 
 class UniversoSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        Universo::insert([
+        DB::table('universos')->insert([
             [
                 'name' => 'Marvel',
                 'description' => 'The Marvel Universe is a fictional shared universe where the stories in most American comic book titles and other media published by Marvel Comics take place.'
@@ -28,7 +25,7 @@ class UniversoSeeder extends Seeder
             [
                 'name' => 'Dark Horse',
                 'description' => 'Dark Horse Comics is an American comic book and manga publisher. It was founded in 1986 by Mike Richardson in Milwaukie, Oregon.'
-            ],
+            ]
         ]);
     }
-} 
+}
