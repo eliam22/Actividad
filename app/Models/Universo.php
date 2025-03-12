@@ -9,21 +9,6 @@ class Universo extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'description',
-    ];
+    protected $fillable = ['name', 'description'];
+}
 
-    /**
-     * Get the superheroes for the universe.
-     */
-    public function superheroes()
-    {
-        return $this->hasMany(Superhero::class);
-    }
-} 
