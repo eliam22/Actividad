@@ -10,5 +10,14 @@ class Universo extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'description'];
+
+    // Relación con Superhero
+    public function superheroes()
+    {
+        return $this->hasMany(Superhero::class);
+    }
 }
+
+
+
 
