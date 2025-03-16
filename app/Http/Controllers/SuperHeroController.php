@@ -29,10 +29,10 @@ class SuperheroController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'real_name' => 'required|string|max:255',
-            'universe_id' => 'required|exists:universes,id',
+            'universe_id' => 'required|exists:universos,id',  // Cambia 'universes' por 'universos'
             'type_id' => 'required|exists:superhero_types,id',
             'gender_id' => 'required|exists:genders,id',
             'powers' => 'required|string',
@@ -41,8 +41,9 @@ class SuperheroController extends Controller
 
         Superhero::create($validated);
 
-        return redirect()->route('superheroes.index')->with('success', 'Superhero created successfully.');
+        return redirect()->route('superheroes.index');
     }
+
 
     public function show(Superhero $superhero)
     {

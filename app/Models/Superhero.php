@@ -29,8 +29,9 @@ class Superhero extends Model
      */
     public function universe()
     {
-        return $this->belongsTo(Universo::class);
+        return $this->belongsTo(Universo::class, 'universe_id');  // Verifica que el campo 'universe_id' sea correcto
     }
+
 
     /**
      * Get the type of the superhero.

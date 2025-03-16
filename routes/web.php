@@ -14,5 +14,4 @@ Route::resource('gender', GenderController::class);
 Route::resource('superheroes', SuperHeroController::class);
 
 
-Route::get('/superheroes/create', [SuperHeroController::class, 'create'])->name('superheroes.create');
-Route::post('/superheroes', [SuperHeroController::class, 'store'])->name('superheroes.store');
+
