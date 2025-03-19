@@ -18,12 +18,10 @@ class SuperheroController extends Controller
 
     public function create()
     {
-        // Obtener todas las listas necesarias para la vista
         $universes = Universo::all();
         $types = SuperHeroType::all();
-        $genders = Gender::all(); // Se añade esta línea
+        $genders = Gender::all();
 
-        // Pasar las variables a la vista
         return view('superheroes.create', compact('universes', 'types', 'genders'));
     }
 
@@ -32,7 +30,7 @@ class SuperheroController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'real_name' => 'required|string|max:255',
-            'universe_id' => 'required|exists:universos,id',  // Cambia 'universes' por 'universos'
+            'universe_id' => 'required|exists:universos,id',
             'type_id' => 'required|exists:superhero_types,id',
             'gender_id' => 'required|exists:genders,id',
             'powers' => 'required|string',
@@ -41,13 +39,46 @@ class SuperheroController extends Controller
 
         Superhero::create($validated);
 
-        return redirect()->route('superheroes.index');
+        return redirect()->route('superheroes.index')->with('success', 'Superhero created successfully.');
     }
-
 
     public function show(Superhero $superhero)
     {
         return view('superheroes.show', compact('superhero'));
     }
+
+    public function edit(Superhero $superhero)
+    {
+        $universes = Universo::all();
+        $types = SuperHeroType::all();
+        $genders = Gender::all();
+
+        return view('superheroes.edit', compact('superhero', 'universes', 'types', 'genders'));
+    }
+
+    public function update(Request $request, Superhero $superhero)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'real_name' => 'required|string|max:255',
+            'universe_id' => 'required|exists:universos,id',
+            'type_id' => 'required|exists:superhero_types,id',
+            'gender_id' => 'required|exists:genders,id',
+            'powers' => 'required|string',
+            'affiliation' => 'nullable|string|max:255',
+        ]);
+
+        $superhero->update($validated);
+
+        return redirect()->route('superheroes.index')->with('success', 'Superhero updated successfully.');
+    }
+
+    public function destroy(Superhero $superhero)
+    {
+        $superhero->delete();
+
+        return redirect()->route('superheroes.index')->with('success', 'Superhero deleted successfully.');
+    }
 }
+
 

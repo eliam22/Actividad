@@ -10,7 +10,7 @@ Route::get('/', function () {
 });
 
 Route::resource('universes', UniverseController::class);
-Route::resource('gender', GenderController::class);
+Route::resource('genders', GenderController::class);
 Route::resource('superheroes', SuperHeroController::class);
 
 

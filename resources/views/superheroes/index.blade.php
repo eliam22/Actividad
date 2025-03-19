@@ -29,7 +29,7 @@
                         <td>{{ $superhero->name }}</td>
                         <td>{{ $superhero->real_name }}</td>
                         <td>{{ $superhero->type->name ?? 'N/A' }}</td>
-                        <td>{{ $superhero->universo->name ?? 'N/A' }}</td> <!-- Corrección aquí -->
+                        <td>{{ $superhero->universe->name ?? 'N/A' }}</td> <!-- Corrección aquí -->
                         <td>
                             <a href="{{ route('superheroes.show', $superhero->id) }}" class="btn btn-info btn-sm">View</a>
                             <a href="{{ route('superheroes.edit', $superhero->id) }}" class="btn btn-warning btn-sm">Edit</a>

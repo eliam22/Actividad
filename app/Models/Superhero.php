@@ -48,4 +48,5 @@ class Superhero extends Model
     {
         return $this->belongsTo(Gender::class);
     }
+    
 } 
