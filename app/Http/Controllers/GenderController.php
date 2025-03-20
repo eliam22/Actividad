@@ -69,6 +69,12 @@ class GenderController extends Controller
         // Redirigir con un mensaje de éxito
         return redirect()->route('genders.index')->with('success', 'Género eliminado exitosamente.');
     }
+    public function show($id)
+    {
+        $gender = Gender::findOrFail($id);
+        return view('genders.show', compact('gender'));
+    }
+    
 
 }
 

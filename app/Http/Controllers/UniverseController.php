@@ -87,6 +87,12 @@ class UniverseController extends Controller
         // Redirige con un mensaje de éxito
         return redirect()->route('universes.index')->with('success', 'Universe deleted successfully!');
     }
+
+    public function show(string $id)
+    {
+        $universe = Universo::findOrFail($id); // Obtiene el universo por ID
+        return view('universes.show', compact('universe')); // Retorna la vista con los detalles
+    }
 }
 
 

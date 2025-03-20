@@ -25,11 +25,26 @@
                         <td class="p-4 text-gray-700">{{ $gender->id }}</td>
                         <td class="p-4 text-gray-700 font-medium">{{ $gender->name }}</td>
                         <td class="p-4 text-center">
-                            <a href="{{ route('genders.edit', $gender->id) }}" class="text-blue-600 hover:text-blue-800 transition">Editar</a>
+                            <!-- Botón de Ver -->
+                            <a href="{{ route('genders.show', $gender->id) }}" 
+                               class="text-green-600 hover:text-green-800 transition px-2">
+                                Ver
+                            </a>
+                            
+                            <!-- Botón de Editar -->
+                            <a href="{{ route('genders.edit', $gender->id) }}" 
+                               class="text-blue-600 hover:text-blue-800 transition px-2">
+                                Editar
+                            </a>
+
+                            <!-- Botón de Eliminar -->
                             <form action="{{ route('genders.destroy', $gender->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-red-500 hover:text-red-700 transition ml-4" onclick="return confirm('¿Seguro que deseas eliminar este género?')">Eliminar</button>
+                                <button type="submit" class="text-red-500 hover:text-red-700 transition px-2" 
+                                        onclick="return confirm('¿Seguro que deseas eliminar este género?')">
+                                    Eliminar
+                                </button>
                             </form>
                         </td>
                     </tr>
@@ -39,8 +54,11 @@
         </div>
 
         <div class="mt-6 text-center">
-            <a href="{{ route('genders.create') }}" class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition">Agregar Género</a>
+            <a href="{{ route('genders.create') }}" 
+               class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition">
+                Agregar Género
+            </a>
         </div>
     </div>
 </body>
-</html> 
+</html>

@@ -9,6 +9,12 @@
 <body class="bg-gray-50 text-gray-900 font-sans">
     <div class="max-w-4xl mx-auto p-6">
         <h1 class="text-4xl font-semibold mb-6 text-center text-gray-800">Lista de Universos</h1>
+
+        @if (session('success'))
+            <div class="bg-green-100 text-green-800 p-4 mb-4 rounded-lg">
+                {{ session('success') }}
+            </div>
+        @endif
         
         <div class="overflow-hidden rounded-xl shadow-lg bg-white">
             <table class="w-full text-left border-collapse">
@@ -25,7 +31,8 @@
                         <td class="p-4 text-gray-700">{{ $universe->id }}</td>
                         <td class="p-4 text-gray-700 font-medium">{{ $universe->name }}</td>
                         <td class="p-4 text-center">
-                            <a href="{{ route('universes.edit', $universe->id) }}" class="text-blue-600 hover:text-blue-800 transition">Editar</a>
+                            <a href="{{ route('universes.show', $universe->id) }}" class="text-green-600 hover:text-green-800 transition">Ver</a>
+                            <a href="{{ route('universes.edit', $universe->id) }}" class="text-blue-600 hover:text-blue-800 transition ml-4">Editar</a>
                             <form action="{{ route('universes.destroy', $universe->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
