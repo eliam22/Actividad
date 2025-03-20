@@ -33,7 +33,7 @@
                         <td>
                             <a href="{{ route('superheroes.show', $superhero->id) }}" class="btn btn-info btn-sm">View</a>
                             <a href="{{ route('superheroes.edit', $superhero->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('superheroes.destroy', $superhero->id) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('superheroes.destroy', $superhero->id) }}" method="POST" style="display:inline;" onsubmit="return confirmDelete()">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -44,6 +44,12 @@
             </tbody>
         </table>
     @endif
+
+    <script>
+        function confirmDelete() {
+            return confirm('¿Seguro que deseas eliminar este género?');
+        }
+    </script>
 </body>
 </html>
 

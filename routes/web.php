@@ -12,6 +12,7 @@ Route::get('/', function () {
 Route::resource('universes', UniverseController::class);
 Route::resource('genders', GenderController::class);
 Route::resource('superheroes', SuperHeroController::class);
+Route::get('/genders/create', [GenderController::class, 'create'])->name('genders.create');
 
 
 

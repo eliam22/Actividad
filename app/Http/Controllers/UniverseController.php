@@ -46,19 +46,12 @@ class UniverseController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        // Aquí puedes agregar la lógica para mostrar un universo específico
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        // Aquí puedes agregar la lógica para editar un universo específico
+        $universe = Universo::findOrFail($id); // Encuentra el universo
+        return view('universes.edit', compact('universe')); // Pasa el universo a la vista de edición
     }
 
     /**
@@ -66,7 +59,20 @@ class UniverseController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Aquí puedes agregar la lógica para actualizar un universo específico
+        // Validación de los datos recibidos
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        // Encuentra el universo y actualiza sus campos
+        $universe = Universo::findOrFail($id);
+        $universe->name = $request->input('name');
+        $universe->description = $request->input('description');
+        $universe->save(); // Guarda los cambios
+
+        // Redirige con un mensaje de éxito
+        return redirect()->route('universes.index')->with('success', 'Universe updated successfully!');
     }
 
     /**
@@ -74,8 +80,14 @@ class UniverseController extends Controller
      */
     public function destroy(string $id)
     {
-        // Aquí puedes agregar la lógica para eliminar un universo específico
+        // Elimina el universo
+        $universe = Universo::findOrFail($id);
+        $universe->delete();
+
+        // Redirige con un mensaje de éxito
+        return redirect()->route('universes.index')->with('success', 'Universe deleted successfully!');
     }
 }
+
 
 
