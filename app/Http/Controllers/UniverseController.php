@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Universe;
 use Illuminate\Http\Request;
-use App\Models\Universo;
+use Illuminate\Support\Facades\DB;
 
 class UniverseController extends Controller
 {
@@ -12,8 +13,8 @@ class UniverseController extends Controller
      */
     public function index()
     {
-        $universes = Universo::all(); // Obtiene todos los universos
-        return view('universes.index', compact('universes')); // Pasa los universos a la vista
+        $universes = Universe::withCount('superheroes')->get();
+        return view('universes.index', compact('universes'));
     }
 
     /**
@@ -21,7 +22,7 @@ class UniverseController extends Controller
      */
     public function create()
     {
-        return view('universes.create'); // Retorna la vista para crear un nuevo universo
+        return view('universes.create');
     }
 
     /**
@@ -29,69 +30,91 @@ class UniverseController extends Controller
      */
     public function store(Request $request)
     {
-        // Validación de los datos recibidos
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255|unique:universes',
+                'description' => 'nullable|string|max:1000'
+            ]);
 
-        // Crear un nuevo universo
-        $universo = new Universo();
-        $universo->name = $request->input('name');
-        $universo->description = $request->input('description');
-        $universo->save(); // Guarda el universo en la base de datos
+            DB::beginTransaction();
+            Universe::create($validated);
+            DB::commit();
 
-        // Redirigir al usuario a la lista de universos con un mensaje de éxito
-        return redirect()->route('universes.index')->with('success', 'Universe created successfully!');
+            return redirect()
+                ->route('universes.index')
+                ->with('success', 'Universo creado exitosamente');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()
+                ->withInput()
+                ->with('error', 'Error al crear el universo: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Universe $universe)
+    {
+        $universe->load('superheroes');
+        return view('universes.show', compact('universe'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Universe $universe)
     {
-        $universe = Universo::findOrFail($id); // Encuentra el universo
-        return view('universes.edit', compact('universe')); // Pasa el universo a la vista de edición
+        return view('universes.edit', compact('universe'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Universe $universe)
     {
-        // Validación de los datos recibidos
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255|unique:universes,name,' . $universe->id,
+                'description' => 'nullable|string|max:1000'
+            ]);
 
-        // Encuentra el universo y actualiza sus campos
-        $universe = Universo::findOrFail($id);
-        $universe->name = $request->input('name');
-        $universe->description = $request->input('description');
-        $universe->save(); // Guarda los cambios
+            DB::beginTransaction();
+            $universe->update($validated);
+            DB::commit();
 
-        // Redirige con un mensaje de éxito
-        return redirect()->route('universes.index')->with('success', 'Universe updated successfully!');
+            return redirect()
+                ->route('universes.index')
+                ->with('success', 'Universo actualizado exitosamente');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()
+                ->withInput()
+                ->with('error', 'Error al actualizar el universo: ' . $e->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Universe $universe)
     {
-        // Elimina el universo
-        $universe = Universo::findOrFail($id);
-        $universe->delete();
+        try {
+            if ($universe->superheroes()->exists()) {
+                return back()->with('error', 'No se puede eliminar el universo porque tiene superhéroes asociados');
+            }
 
-        // Redirige con un mensaje de éxito
-        return redirect()->route('universes.index')->with('success', 'Universe deleted successfully!');
-    }
+            DB::beginTransaction();
+            $universe->delete();
+            DB::commit();
 
-    public function show(string $id)
-    {
-        $universe = Universo::findOrFail($id); // Obtiene el universo por ID
-        return view('universes.show', compact('universe')); // Retorna la vista con los detalles
+            return redirect()
+                ->route('universes.index')
+                ->with('success', 'Universo eliminado exitosamente');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Error al eliminar el universo: ' . $e->getMessage());
+        }
     }
 }
 

@@ -1,137 +1,141 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Superhéroe</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-            background-color: #f7f7f7;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .form-container {
-            background-color: #fff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            padding: 30px;
-            width: 100%;
-            max-width: 400px;
-        }
-        .form-container h2 {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .form-container input,
-        .form-container select {
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 16px;
-            width: 100%;
-            margin-bottom: 16px;
-            background-color: #f9f9f9;
-        }
-        .form-container input:focus,
-        .form-container select:focus {
-            outline: none;
-            border-color: #007bff;
-            background-color: #fff;
-        }
-        .form-container button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 16px;
-            width: 100%;
-            cursor: pointer;
-        }
-        .form-container button:hover {
-            background-color: #0056b3;
-        }
-        .form-container a {
-            color: #007bff;
-            text-align: center;
-            display: block;
-            margin-top: 15px;
-            text-decoration: none;
-        }
-        .form-container a:hover {
-            text-decoration: underline;
-        }
-        .alert {
-            font-size: 14px;
-        }
-    </style>
-</head>
-<body>
+@extends('layouts.app')
 
-    <div class="form-container">
-        <h2>Editar Superhéroe</h2>
+@section('title', 'Edit Superhero')
 
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+@section('content')
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Edit Superhero</h2>
+        </div>
+        <div class="card-body">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-        <form action="{{ route('superheroes.update', $superhero->id) }}" method="POST">
-            @csrf
-            @method('PUT')
+            <form action="{{ route('superheroes.update', $superhero) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="mb-3">
+                    <label for="name" class="form-label">Superhero Name</label>
+                    <input type="text" class="form-control" id="name" name="name" 
+                           value="{{ old('name', $superhero->name) }}" required>
+                </div>
 
-            <input type="text" name="name" id="name" value="{{ $superhero->name }}" placeholder="Nombre del superhéroe" required>
-            <input type="text" name="real_name" id="real_name" value="{{ $superhero->real_name }}" placeholder="Nombre real del superhéroe" required>
-            <input type="text" name="powers" id="powers" value="{{ $superhero->powers }}" placeholder="Poderes del superhéroe" required>
-            <input type="text" name="origin" id="origin" value="{{ $superhero->origin }}" placeholder="Origen del superhéroe">
+                <div class="mb-3">
+                    <label for="real_name" class="form-label">Real Name</label>
+                    <input type="text" class="form-control" id="real_name" name="real_name" 
+                           value="{{ old('real_name', $superhero->real_name) }}" required>
+                </div>
 
-            <select name="universe_id" id="universe_id" required>
-                <option value="">Selecciona un Universo</option>
-                @foreach ($universes as $universe)
-                    <option value="{{ $universe->id }}" {{ $superhero->universe_id == $universe->id ? 'selected' : '' }}>
-                        {{ $universe->name }}
-                    </option>
-                @endforeach
-            </select>
+                <div class="mb-3">
+                    <label for="universe_id" class="form-label">Universe</label>
+                    <select class="form-control" id="universe_id" name="universe_id" required>
+                        @foreach($universes as $universe)
+                            <option value="{{ $universe->id }}"
+                                {{ old('universe_id', $superhero->universe_id) == $universe->id ? 'selected' : '' }}>
+                                {{ $universe->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <select name="type_id" id="type_id" required>
-                <option value="">Selecciona un Tipo de Superhéroe</option>
-                @foreach ($types as $type)
-                    <option value="{{ $type->id }}" {{ $superhero->type_id == $type->id ? 'selected' : '' }}>
-                        {{ $type->name }}
-                    </option>
-                @endforeach
-            </select>
+                <div class="mb-3">
+                    <label for="type_id" class="form-label">Type</label>
+                    <select class="form-control" id="type_id" name="type_id" required>
+                        @foreach($types as $type)
+                            <option value="{{ $type->id }}"
+                                {{ old('type_id', $superhero->type_id) == $type->id ? 'selected' : '' }}>
+                                {{ $type->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <select name="gender_id" id="gender_id" required>
-                <option value="">Selecciona un Género</option>
-                @foreach ($genders as $gender)
-                    <option value="{{ $gender->id }}" {{ $superhero->gender_id == $gender->id ? 'selected' : '' }}>
-                        {{ $gender->name }}
-                    </option>
-                @endforeach
-            </select>
+                <div class="mb-3">
+                    <label for="gender_id" class="form-label">Gender</label>
+                    <select class="form-control" id="gender_id" name="gender_id" required>
+                        @foreach($genders as $gender)
+                            <option value="{{ $gender->id }}"
+                                {{ old('gender_id', $superhero->gender_id) == $gender->id ? 'selected' : '' }}>
+                                {{ $gender->display_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <button type="submit">Actualizar</button>
-        </form>
+                <div class="mb-3">
+                    <label class="form-label">Powers</label>
+                    @php
+                        $powersList = [
+                            'Super Strength',
+                            'Flight',
+                            'Invisibility',
+                            'Telepathy',
+                            'Mind Control',
+                            'Regeneration',
+                            'Super Speed',
+                            'Elemental Control'
+                        ];
+                        $currentPowers = old('powers', $superhero->powers) ?? [];
+                        if (!is_array($currentPowers)) {
+                            $currentPowers = json_decode($currentPowers, true) ?? [];
+                        }
+                    @endphp
+                    
+                    <div class="row">
+                        @foreach($powersList as $power)
+                            <div class="col-md-6">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" 
+                                           name="powers[]" value="{{ $power }}" 
+                                           id="power_{{ $loop->index }}"
+                                           {{ in_array($power, $currentPowers) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="power_{{ $loop->index }}">
+                                        {{ $power }}
+                                    </label>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
 
-        <a href="{{ route('superheroes.index') }}">Volver a la lista</a>
+                <div class="mb-3">
+                    <label for="affiliation" class="form-label">Affiliation</label>
+                    <select class="form-control" id="affiliation" name="affiliation" required>
+                        @php
+                            $affiliations = [
+                                'Avengers',
+                                'Justice League',
+                                'X-Men',
+                                'Guardians of the Galaxy',
+                                'Independent'
+                            ];
+                        @endphp
+                        @foreach($affiliations as $affiliation)
+                            <option value="{{ $affiliation }}"
+                                {{ old('affiliation', $superhero->affiliation) == $affiliation ? 'selected' : '' }}>
+                                {{ $affiliation }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{{ route('superheroes.index') }}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Update Superhero</button>
+                </div>
+            </form>
+        </div>
     </div>
-
-</body>
-</html>
+</div>
+@endsection
 
 
 

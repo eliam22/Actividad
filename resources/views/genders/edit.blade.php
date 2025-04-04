@@ -1,30 +1,45 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Género</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container mt-4">
-        <h2>Editar Género</h2>
+@extends('layouts.app')
 
-        <!-- Formulario para editar género -->
-        <form action="{{ route('genders.update', $gender->id) }}" method="POST">
-            @csrf
-            @method('PUT') <!-- Utilizamos PUT para el método de actualización -->
-            
-            <!-- Campo de nombre del género -->
-            <div class="mb-3">
-                <label for="name" class="form-label">Nombre del Género</label>
-                <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $gender->name) }}" required placeholder="Nombre del género">
-            </div>
+@section('title', 'Edit Gender')
 
-            <!-- Botones para guardar o cancelar -->
-            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-            <a href="{{ route('genders.index') }}" class="btn btn-secondary">Cancelar</a>
-        </form>
+@section('content')
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Edit Gender</h2>
+        </div>
+        <div class="card-body">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ route('genders.update', $gender) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" 
+                           value="{{ old('name', $gender->name) }}" required>
+                    <small class="text-muted">Enter the gender name in English (e.g., male, female, other)</small>
+                </div>
+                <div class="mb-3">
+                    <label for="display_name" class="form-label">Display Name</label>
+                    <input type="text" class="form-control" id="display_name" name="display_name" 
+                           value="{{ old('display_name', $gender->display_name) }}" required>
+                    <small class="text-muted">Enter how you want this gender to be displayed</small>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a href="{{ route('genders.index') }}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+        </div>
     </div>
-</body>
-</html>
+</div>
+@endsection

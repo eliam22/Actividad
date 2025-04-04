@@ -4,23 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Gender;
-use App\Models\Universo;
-use App\Models\SuperheroType;
+use App\Models\Universe;
+use App\Models\SuperHeroType;
+use Illuminate\Support\Facades\DB;
 
 
 class GenderController extends Controller
 {
     public function index()
     {
-        $genders = Gender::all();
+        $genders = Gender::withCount('superheroes')->get();
         return view('genders.index', compact('genders'));
     }
 
     public function create()
     {
-        $universes = Universo::all(); // Obtener universos
-        $types = SuperheroType::all(); // Obtener tipos de superhéroes
-        $genders = Gender::all(); // Obtener géneros
+        $universes = Universe::all(); // Cambiado de Universo a Universe
+        $types = SuperHeroType::all();
+        $genders = Gender::all();
 
         return view('genders.create', compact('universes', 'types', 'genders'));
     }
@@ -28,50 +29,74 @@ class GenderController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255|unique:genders',
+                'display_name' => 'required|string|max:255'
+            ]);
 
-        Gender::create($request->all());
+            DB::beginTransaction();
+            Gender::create($validated);
+            DB::commit();
 
-        return redirect()->route('genders.index')->with('success', 'Gender created successfully.');
+            return redirect()
+                ->route('genders.index')
+                ->with('success', 'Gender created successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()
+                ->withInput()
+                ->with('error', 'Error creating gender: ' . $e->getMessage());
+        }
     }
-    public function edit($id)
+    public function edit(Gender $gender)
     {
-        // Obtener el género a editar
-        $gender = Gender::findOrFail($id);
-        $universes = Universo::all(); // Obtener universos
-        $types = SuperheroType::all(); // Obtener tipos de superhéroes
-
-        return view('genders.edit', compact('gender', 'universes', 'types'));
+        return view('genders.edit', compact('gender'));
     }
-    public function update(Request $request, $id)
+    public function update(Request $request, Gender $gender)
     {
-        // Validar los datos
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255|unique:genders,name,' . $gender->id,
+                'display_name' => 'required|string|max:255'
+            ]);
 
-        // Obtener el género a actualizar
-        $gender = Gender::findOrFail($id);
-        $gender->name = $request->name;
-        $gender->save();
+            DB::beginTransaction();
+            $gender->update($validated);
+            DB::commit();
 
-        // Redirigir al índice de géneros con un mensaje de éxito
-        return redirect()->route('genders.index')->with('success', 'Género actualizado exitosamente.');
+            return redirect()
+                ->route('genders.index')
+                ->with('success', 'Gender updated successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()
+                ->withInput()
+                ->with('error', 'Error updating gender: ' . $e->getMessage());
+        }
     }
-    public function destroy($id)
+    public function destroy(Gender $gender)
     {
-        // Obtener el género a eliminar
-        $gender = Gender::findOrFail($id);
-        $gender->delete();
+        try {
+            if ($gender->superheroes()->exists()) {
+                return back()->with('error', 'Cannot delete gender because it has associated superheroes');
+            }
 
-        // Redirigir con un mensaje de éxito
-        return redirect()->route('genders.index')->with('success', 'Género eliminado exitosamente.');
+            DB::beginTransaction();
+            $gender->delete();
+            DB::commit();
+
+            return redirect()
+                ->route('genders.index')
+                ->with('success', 'Gender deleted successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Error deleting gender: ' . $e->getMessage());
+        }
     }
-    public function show($id)
+    public function show(Gender $gender)
     {
-        $gender = Gender::findOrFail($id);
+        $gender->load('superheroes.universe');
         return view('genders.show', compact('gender'));
     }
     

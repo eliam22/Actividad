@@ -1,29 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Nuevo Género</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container mt-4">
-        <h2>Agregar Nuevo Género</h2>
+@extends('layouts.app')
 
-        <!-- Formulario para agregar género -->
-        <form action="{{ route('genders.store') }}" method="POST">
-            @csrf <!-- Protege el formulario contra ataques CSRF -->
-            
-            <!-- Campo de nombre del género -->
-            <div class="mb-3">
-                <label for="name" class="form-label">Nombre del Género</label>
-                <input type="text" class="form-control" id="name" name="name" required placeholder="Nombre del género">
-            </div>
+@section('title', 'Create Gender')
 
-            <!-- Botón para enviar el formulario -->
-            <button type="submit" class="btn btn-primary">Guardar</button>
-            <a href="{{ route('genders.index') }}" class="btn btn-secondary">Cancelar</a>
-        </form>
+@section('content')
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Create New Gender</h2>
+        </div>
+        <div class="card-body">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <form action="{{ route('genders.store') }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name (English)</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="display_name" class="form-label">Display Name (Spanish)</label>
+                    <input type="text" class="form-control" id="display_name" name="display_name" value="{{ old('display_name') }}" required>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a href="{{ route('genders.index') }}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Create Gender</button>
+                </div>
+            </form>
+        </div>
     </div>
-</body>
-</html>
+</div>
+@endsection

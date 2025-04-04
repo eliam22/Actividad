@@ -1,24 +1,86 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalles del Universo</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50 text-gray-900 font-sans">
-    <div class="max-w-4xl mx-auto p-6">
-        <h1 class="text-4xl font-semibold mb-6 text-center text-gray-800">Detalles del Universo</h1>
-        
-        <div class="bg-white shadow-lg rounded-lg p-6">
-            <p class="text-lg"><strong>ID:</strong> {{ $universe->id }}</p>
-            <p class="text-lg"><strong>Nombre:</strong> {{ $universe->name }}</p>
-            <p class="text-lg"><strong>Descripción:</strong> {{ $universe->description }}</p>
-        </div>
+@extends('layouts.app')
 
-        <div class="mt-6 text-center">
-            <a href="{{ route('universes.index') }}" class="bg-gray-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition">Volver</a>
+@section('title', 'Universe Details')
+
+@section('content')
+<div class="container">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2>{{ $universe->name }}</h2>
+            <div>
+                <a href="{{ route('universes.index') }}" class="btn btn-secondary">Back</a>
+                <a href="{{ route('universes.edit', $universe) }}" class="btn btn-warning">Edit</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header bg-primary text-white">
+                            <h4 class="mb-0">Universe Information</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th class="bg-light" width="30%">ID</th>
+                                    <td>{{ $universe->id }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Name</th>
+                                    <td>{{ $universe->name }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Description</th>
+                                    <td>{{ $universe->description }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Created At</th>
+                                    <td>{{ $universe->created_at->format('Y-m-d H:i') }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light">Last Updated</th>
+                                    <td>{{ $universe->updated_at->format('Y-m-d H:i') }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header bg-success text-white">
+                            <h4 class="mb-0">Superheroes in this Universe</h4>
+                        </div>
+                        <div class="card-body">
+                            @if($universe->superheroes->count() > 0)
+                                <div class="list-group">
+                                    @foreach($universe->superheroes as $hero)
+                                        <a href="{{ route('superheroes.show', $hero) }}" 
+                                           class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                            {{ $hero->name }}
+                                            <span class="badge bg-primary rounded-pill">{{ $hero->gender->display_name }}</span>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @else
+                                <p class="text-muted mb-0">No superheroes in this universe yet.</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <form action="{{ route('universes.destroy', $universe) }}" method="POST" class="d-inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger" 
+                            onclick="return confirm('Are you sure you want to delete this universe?')">
+                        Delete Universe
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+@endsection

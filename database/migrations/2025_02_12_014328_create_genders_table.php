@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('genders', function (Blueprint $table) {
-            $table->engine = 'InnoDB'; // Asegúrate de usar InnoDB
             $table->id();
-            $table->string('name', 50);
+            $table->string('name');
+            $table->string('display_name'); // Nombre para mostrar en español
             $table->timestamps();
         });
     }

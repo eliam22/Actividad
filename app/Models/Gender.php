@@ -16,6 +16,7 @@ class Gender extends Model
      */
     protected $fillable = [
         'name',
+        'display_name'
     ];
 
     /**
@@ -23,6 +24,6 @@ class Gender extends Model
      */
     public function superheroes()
     {
-        return $this->hasMany(Superhero::class);
+        return $this->hasMany(SuperHero::class);
     }
 } 

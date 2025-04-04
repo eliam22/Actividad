@@ -22,9 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Rutas protegidas de recursos
-    Route::resource('universes', UniverseController::class);
+    Route::resource('universes', UniverseController::class)->middleware(['auth']);
     Route::resource('genders', GenderController::class);
-    Route::resource('superheroes', SuperHeroController::class);
+    Route::resource('superheroes', SuperHeroController::class)->middleware(['auth']);
     Route::get('/genders/create', [GenderController::class, 'create'])->name('genders.create');
 });
 

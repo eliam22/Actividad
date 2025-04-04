@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Superhero extends Model
+class SuperHero extends Model
 {
     use HasFactory;
 
@@ -21,7 +21,7 @@ class Superhero extends Model
         'type_id',
         'gender_id',
         'powers',
-        'affiliation',
+        'affiliation'
     ];
 
     /**
@@ -29,16 +29,15 @@ class Superhero extends Model
      */
     public function universe()
     {
-        return $this->belongsTo(Universo::class, 'universe_id');  // Verifica que el campo 'universe_id' sea correcto
+        return $this->belongsTo(Universe::class);
     }
-
 
     /**
      * Get the type of the superhero.
      */
     public function type()
     {
-        return $this->belongsTo(SuperheroType::class);
+        return $this->belongsTo(SuperHeroType::class);
     }
 
     /**
@@ -48,5 +47,10 @@ class Superhero extends Model
     {
         return $this->belongsTo(Gender::class);
     }
-    
+
+    protected $table = 'superheroes';
+
+    protected $casts = [
+        'powers' => 'array'
+    ];
 } 

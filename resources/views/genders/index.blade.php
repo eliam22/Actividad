@@ -1,64 +1,59 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Géneros</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50 text-gray-900 font-sans">
-    <div class="max-w-4xl mx-auto p-6">
-        <h1 class="text-4xl font-semibold mb-6 text-center text-gray-800">Lista de Géneros</h1>
-        
-        <div class="overflow-hidden rounded-xl shadow-lg bg-white">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-gray-100 text-gray-700">
-                        <th class="p-4 text-lg">ID</th>
-                        <th class="p-4 text-lg">Nombre</th>
-                        <th class="p-4 text-lg text-center">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-300">
-                    @foreach($genders as $gender)
-                    <tr class="hover:bg-gray-200 transition">
-                        <td class="p-4 text-gray-700">{{ $gender->id }}</td>
-                        <td class="p-4 text-gray-700 font-medium">{{ $gender->name }}</td>
-                        <td class="p-4 text-center">
-                            <!-- Botón de Ver -->
-                            <a href="{{ route('genders.show', $gender->id) }}" 
-                               class="text-green-600 hover:text-green-800 transition px-2">
-                                Ver
-                            </a>
-                            
-                            <!-- Botón de Editar -->
-                            <a href="{{ route('genders.edit', $gender->id) }}" 
-                               class="text-blue-600 hover:text-blue-800 transition px-2">
-                                Editar
-                            </a>
+@extends('layouts.app')
 
-                            <!-- Botón de Eliminar -->
-                            <form action="{{ route('genders.destroy', $gender->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-500 hover:text-red-700 transition px-2" 
-                                        onclick="return confirm('¿Seguro que deseas eliminar este género?')">
-                                    Eliminar
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+@section('title', 'Genders')
+
+@section('content')
+<div class="container">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2>Genders</h2>
+            <a href="{{ route('genders.create') }}" class="btn btn-primary">Create New Gender</a>
         </div>
+        <div class="card-body">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-        <div class="mt-6 text-center">
-            <a href="{{ route('genders.create') }}" 
-               class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition">
-                Agregar Género
-            </a>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Display Name</th>
+                            <th>Heroes Count</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($genders as $gender)
+                        <tr>
+                            <td>{{ $gender->id }}</td>
+                            <td>{{ $gender->name }}</td>
+                            <td>{{ $gender->display_name }}</td>
+                            <td>{{ $gender->superheroes->count() }}</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ route('genders.show', $gender) }}" class="btn btn-info btn-sm">View</a>
+                                    <a href="{{ route('genders.edit', $gender) }}" class="btn btn-warning btn-sm">Edit</a>
+                                    <form action="{{ route('genders.destroy', $gender) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" 
+                                                onclick="return confirm('Are you sure you want to delete this gender?')">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+@endsection
