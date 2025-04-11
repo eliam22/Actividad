@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Gender;
+use Illuminate\Database\Seeder;
 
 class GenderSeeder extends Seeder
 {
@@ -12,11 +12,17 @@ class GenderSeeder extends Seeder
      */
     public function run(): void
     {
-        Gender::insert([
-            ['name' => 'Male'],
-            ['name' => 'Female'],
-            ['name' => 'Non-binary'],
-            ['name' => 'Other'],
+        Gender::create([
+            'name' => 'male',
+            'display_name' => 'Male'
+        ]);
+        Gender::create([
+            'name' => 'female',
+            'display_name' => 'Female'
+        ]);
+        Gender::create([
+            'name' => 'other',
+            'display_name' => 'Other'
         ]);
     }
 } 

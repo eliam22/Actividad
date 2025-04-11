@@ -39,3 +39,23 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Agrega esto al final del archivo
+Route::prefix('api')->group(function () {
+    // Test route
+    Route::get('test', function () {
+        return response()->json(['message' => 'API is working']);
+    });
+    
+    // Universe routes
+    Route::get('universes', [App\Http\Controllers\Api\UniverseApiController::class, 'index']);
+    Route::get('universes/{name}', [App\Http\Controllers\Api\UniverseApiController::class, 'show']);
+
+    // Superhero routes
+    Route::get('superheroes', [App\Http\Controllers\Api\SuperHeroApiController::class, 'index']);
+    Route::get('superheroes/{name}', [App\Http\Controllers\Api\SuperHeroApiController::class, 'show']);
+
+    // Gender routes
+    Route::get('genders', [App\Http\Controllers\Api\GenderApiController::class, 'index']);
+    Route::get('genders/{name}', [App\Http\Controllers\Api\GenderApiController::class, 'show']);
+});
